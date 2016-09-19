@@ -1,0 +1,13 @@
+---
+ovs1:
+  dirname: "ovs1"
+  name: "prev_ovs_release"
+  repo: "https://github.com/openvswitch/ovs.git"
+  version: "branch-2.6"
+
+ovs2:
+  dirname: "ovs2"
+  name: "new_ovs_release"
+  repo: "https://github.com/flavio-fernandes/ovs.git"
+  ##version: "2156ef0"
+

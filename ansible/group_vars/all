@@ -1,0 +1,10 @@
+# The global variable file ovs db upgrade test
+
+# The directory where ovsdb dbs are stored
+ovsdb_dbdir: /home/vagrant/db
+
+# The directory where ovs repos are clonned
+ovs_clone_dir: /home/vagrant
+
+# The depth param to be provided to git clone
+ovs_clone_depth: 5

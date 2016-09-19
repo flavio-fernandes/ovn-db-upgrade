@@ -1,0 +1,47 @@
+---
+- debug: msg="preparing ovs {{ item.0 }} from {{ item.1 }} @@ {{ item.2 }}"
+  with_together:
+    - "{{ ovs_info.name }}"
+    - "{{ ovs_info.repo }}"
+    - "{{ ovs_info.get('version', 'HEAD') }}"
+
+- name: "git clone"
+  git:
+    repo: "{{ ovs_info.repo }}"
+    dest: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
+    depth: "{{ ovs_clone_depth }}"
+    version: "{{ ovs_info.get('version', 'HEAD') }}"
+    recursive: no
+    update: no
+
+- name: "uname -r"
+  shell: uname -r
+  register: uname_info
+
+- name: "nproc"
+  shell: nproc
+  register: nproc_info
+
+- name: "boot.sh"
+  command: ./boot.sh
+  args:
+    chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
+    creates: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}/configure"
+
+- name: "configure"
+  command: >
+    ./configure --with-dbdir="{{ ovsdb_dbdir }}" --prefix=/usr
+    --localstatedir=/var --sysconfdir=/etc --enable-ssl
+    --with-linux="/lib/modules/{{ uname_info.stdout }}/build"
+  args:
+    chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
+    creates: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}/Makefile"
+
+- name: "make ovs"
+  make:
+    chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
+    # FIXME(flaviof): find a better way of passing params into make
+    # ref: http://docs.ansible.com/ansible/make_module.html
+    # params="-j{{ nproc_info.stdout }}"
+    target: "-j{{ nproc_info.stdout }}"
+
