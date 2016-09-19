@@ -1,7 +1,14 @@
+Running tests to make ovn db update
+===================================
 
-time vagrant up
-vagrant ssh
+- time vagrant up
 
-cd ansible
-time ansible-playbook -i hosts site.yml
+- vagrant ssh
+
+- cd ansible
+
+- time ansible-playbook -i hosts site.yml
+
+
+**WIP**
 

@@ -40,8 +40,7 @@
 - name: "make ovs"
   make:
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
-    # FIXME(flaviof): find a better way of passing params into make
+    # TODO(flaviof): find a better way of passing params into make
     # ref: http://docs.ansible.com/ansible/make_module.html
     # params="-j{{ nproc_info.stdout }}"
     target: "-j{{ nproc_info.stdout }}"
-

@@ -1,6 +1,7 @@
 ---
 - name: install pre-reqs for building ovs
   apt: name={{ item }} update_cache=yes
+  become: yes
   with_items:
     - git
     - build-essential

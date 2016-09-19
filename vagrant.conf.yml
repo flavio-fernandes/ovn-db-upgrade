@@ -3,5 +3,7 @@ box: "ubuntu/trusty64"
 box1:
   autostart: true
   host_name: "db-upgrade-ovs"
-  memory: 8192
-  cpus: 8
+  memory: 512
+  cpus: 2
+  #memory: 8192
+  #cpus: 8
