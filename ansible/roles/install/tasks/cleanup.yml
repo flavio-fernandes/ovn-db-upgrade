@@ -1,0 +1,43 @@
+---
+- debug: msg="stopping running ovs"
+
+- name: "check if /usr/share/openvswitch/scripts/ovn-ctl exists"
+  stat: path="/usr/share/openvswitch/scripts/ovn-ctl"
+  register: ovn_ctl_script
+
+- name: "make sure ovn is not running"
+  command: /usr/share/openvswitch/scripts/ovn-ctl {{ item }}
+  become: yes
+  with_items:
+    - stop_controller
+    - stop_northd
+  when: ovn_ctl_script.stat.exists
+
+- name: "check if openvswitch_switch service exists"
+  stat: path="/etc/init.d/openvswitch-switch"
+  register: openvswitch_switch_service
+
+- name: "make sure openvswitch-switch is not running"
+  service: name=openvswitch-switch state=stopped
+  become: yes
+  when: openvswitch_switch_service.stat.exists
+- pause: seconds=1
+  when: openvswitch_switch_service.stat.exists
+
+- name: "check if ovs has previously created a database"
+  stat: path="{{ ovsdb_dbdir }}/conf.db"
+  register: pre_existing_conf_db
+
+- debug: msg="Database file {{ ovsdb_dbdir }}/conf.db is present before install in {{ ansible_eth0["ipv4"]["address"] }}"
+  when: pre_existing_conf_db.stat.exists
+
+- name: "remove currently installed geneve module"
+  modprobe: name=vport-geneve state=absent
+  become: yes
+
+- name: "remove (try to) currently installed ovs module"
+  modprobe: name=openvswitch state=absent
+  become: yes
+  # Note: it is not the end of the world if this fails...
+  # http://openvswitch.org/pipermail/discuss/2016-September/022754.html
+  ignore_errors: yes

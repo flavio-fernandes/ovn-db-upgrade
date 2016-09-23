@@ -1,0 +1,6 @@
+---
+- debug: msg="installing ovs {{ ovs_info.name }} in {{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
+
+- include: cleanup.yml
+- include: start.yml
+

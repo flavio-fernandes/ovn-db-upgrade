@@ -8,5 +8,6 @@
   become_method: sudo
   roles:
     - common
-    - build
-
+    - prepare
+    - { role: install, ovs_info: "{{ovs1}}" }
+    - { role: install, ovs_info: "{{ovs2}}" }

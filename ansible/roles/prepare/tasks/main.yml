@@ -1,0 +1,14 @@
+---
+- include: download.yml param={{ item }}
+  with_items:
+  - "{{ovs1}}"
+  - "{{ovs2}}"
+  loop_control:
+    loop_var: ovs_info
+
+- include: build.yml param={{ item }}
+  with_items:
+  - "{{ovs1}}"
+  - "{{ovs2}}"
+  loop_control:
+    loop_var: ovs_info

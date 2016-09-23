@@ -5,5 +5,3 @@ box1:
   host_name: "db-upgrade-ovs"
   memory: 512
   cpus: 2
-  #memory: 8192
-  #cpus: 8
