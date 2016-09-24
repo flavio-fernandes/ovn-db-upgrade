@@ -1,5 +1,9 @@
 ---
-- name: "install ovs from build directory"
+- name: "explicitly create dbdir"
+  file: path="{{ ovsdb_dbdir }}" state=directory owner=root group=root mode=0755
+  when: "{{ ovsdb_dbdir_explicit_create }}"
+
+- name: "install ovn from build directory and start it"
   become: yes
   make:
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"

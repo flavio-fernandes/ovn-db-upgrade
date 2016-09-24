@@ -1,0 +1,6 @@
+---
+- name: Blow away the OVS databases
+  hosts: local
+  connection: local
+  roles:
+    - cleanup_db

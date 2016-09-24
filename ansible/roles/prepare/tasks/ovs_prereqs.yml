@@ -1,0 +1,23 @@
+---
+- name: install package pre-reqs for building ovs
+  apt: name={{ item }}
+  become: yes
+  with_items:
+    - git
+    - build-essential
+    - fakeroot
+    - graphviz
+    - autoconf
+    - automake
+    - bzip2
+    - openssl
+    - libssl-dev
+    - libtool
+    - debhelper
+    - procps
+    - dh-autoreconf
+    - python-qt4
+    - python-twisted-conch
+    - python-zopeinterface
+    - python-six
+    - python-all

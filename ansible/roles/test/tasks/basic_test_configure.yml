@@ -1,0 +1,3 @@
+---
+- debug: msg="basic test configure"
+

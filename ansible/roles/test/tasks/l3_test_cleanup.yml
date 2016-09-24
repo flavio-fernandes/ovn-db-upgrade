@@ -1,0 +1,14 @@
+---
+- name: remove ip netns created by case1
+  shell: ip netns delete {{ item }}
+  become: yes
+  args:
+    chdir: "{{ ovn_namespace_repo_dir }}"
+  register: netns_delete_result
+  failed_when: (netns_delete_result.rc != 0) and (netns_delete_result.rc != 1)
+  with_items:
+    - bob1
+    - bar1
+    - alice1
+    - foo1
+

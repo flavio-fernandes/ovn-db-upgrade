@@ -17,7 +17,8 @@
 
 - name: "configure"
   command: >
-    ./configure --with-dbdir="{{ ovsdb_dbdir }}" --prefix=/usr
+    ./configure --with-dbdir="{{ ovsdb_dbdir }}"
+    --prefix=/usr --enable-Werror
     --localstatedir=/var --sysconfdir=/etc --enable-ssl
     --with-linux="/lib/modules/{{ uname_info.stdout }}/build"
   args:

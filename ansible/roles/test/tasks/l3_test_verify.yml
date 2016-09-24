@@ -1,0 +1,24 @@
+---
+- debug: msg="l3 test verify"
+
+- include: basic_test_verify.yml
+
+- name: ensure ports are bound
+  become: true
+  command: ovn-sbctl show
+  register: ovn_sbctl_result
+
+- fail: msg="Did not find port bind for {{ item }}"
+  when: ovn_sbctl_result.stdout.find("{{ item }}") == -1
+  with_items:
+    - bar1
+    - alice1
+    - foo1
+    - bob1
+
+- name: make sure bob1 can reach bar1 through R1 and R2
+  command: ip netns exec bob1 ping -v -c 3 -w 5 192.168.2.2
+  become: yes
+  register: ping_result
+  failed_when: (ping_result.rc != 0) or (ping_result.stdout.find(' 0% packet loss') == -1)
+

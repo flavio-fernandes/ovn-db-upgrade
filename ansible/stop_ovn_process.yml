@@ -1,0 +1,9 @@
+---
+- name: Stop OVS and OVN processes
+  hosts: local
+  connection: local
+  tasks:
+    - include: ./roles/common/tasks/stop_ovn_process.yml
+
+
+

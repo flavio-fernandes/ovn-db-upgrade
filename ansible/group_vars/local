@@ -10,11 +10,16 @@ ovs1:
 ovs2:
   dirname: "ovs2"
   name: "new_ovs_release"
-  repo: "https://github.com/flavio-fernandes/ovs.git"
+  repo: "https://github.com/openvswitch/ovs.git"
   ##version: "2156ef0"
 
 # The directory where ovsdb dbs are stored
 ovsdb_dbdir: /home/vagrant/db
+
+# Explicitly create ovsdb_dir. That is needed if you
+# use an ovs build that happened before a known bug was
+# fixed (https://patchwork.ozlabs.org/patch/669472/)
+ovsdb_dbdir_explicit_create: true
 
 # The directory where ovs repos are cloned
 ovs_clone_dir: /home/vagrant

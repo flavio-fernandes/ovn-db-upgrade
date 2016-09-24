@@ -1,6 +1,8 @@
 ---
-box: "ubuntu/trusty64"
-box1:
+auto_start_upgrade_check: true
+
+ubuntu:
+  box: "ubuntu/trusty64"
   autostart: true
   host_name: "db-upgrade-ovs"
   memory: 512

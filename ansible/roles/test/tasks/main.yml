@@ -1,0 +1,3 @@
+---
+- name: "test {{ name }} on stage {{ stage }}"
+  include: "{{ name }}_{{ stage }}.yml"

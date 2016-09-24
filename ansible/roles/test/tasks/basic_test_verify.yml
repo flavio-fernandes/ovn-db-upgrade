@@ -1,0 +1,9 @@
+---
+- debug: msg="basic test verify"
+
+- name: ensure there is a chassis connected to southbound db
+  become: true
+  command: ovn-sbctl show
+  register: command_result
+  failed_when:
+    - "'Chassis' not in command_result.stdout"

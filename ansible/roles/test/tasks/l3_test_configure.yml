@@ -1,0 +1,23 @@
+---
+- debug: msg="l3 test configure"
+
+- name: git clone ovn-namespace.git
+  git:
+    repo: "{{ ovn_namespace_repo }}"
+    dest: "{{ ovn_namespace_repo_dir }}"
+    depth: 1
+    version: "{{ ovn_namespace_repo_version }}"
+    recursive: no
+    update: no
+
+- name: ovn-namespace case1.sh host1
+  shell: ./case1.sh host1
+  become: yes
+  args:
+    chdir: "{{ ovn_namespace_repo_dir }}"
+
+- name: ovn-namespace case1.sh host2
+  shell: ./case1.sh host2 --db=tcp:{{ ansible_eth0["ipv4"]["address"] }}:6641
+  become: yes
+  args:
+    chdir: "{{ ovn_namespace_repo_dir }}"

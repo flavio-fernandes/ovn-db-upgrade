@@ -1,0 +1,25 @@
+---
+- name: Install 2 ovs+ovn builds and upgrade db from one to the other
+  hosts: local
+  connection: local
+  roles:
+    # NOTE: Be careful about items below that are not unique.
+    #       That is because Ansible will silently skip repeats.
+    #       To avoid that behavior, the entries below have a unique
+    #       id.
+    - prepare
+
+    - { id: 1.1, role: install, ovs_info: "{{ovs1}}" }
+    - { id: 1.2, role: test, name: "basic_test", stage: "configure" }
+    - { id: 1.3, role: install, ovs_info: "{{ovs2}}" }
+    - { id: 1.4, role: test, name: "basic_test", stage: "verify" }
+    - { id: 1.5, role: cleanup_db }
+
+    - { id: 2.1, role: install, ovs_info: "{{ovs1}}" }
+    - { id: 2.2, role: test, name: "l3_test", stage: "configure" }
+    - { id: 2.3, role: test, name: "l3_test", stage: "verify", note: "before_upgrade_unique" }
+    - { id: 2.4, role: install, ovs_info: "{{ovs2}}" }
+    - { id: 2.5, role: test, name: "l3_test", stage: "verify", note: "after_upgrade_unique" }
+    - { id: 2.6, role: cleanup_db }
+    - { id: 2.7, role: test, name: "l3_test", stage: "cleanup" }
+

@@ -1,0 +1,5 @@
+---
+ovn_namespace_repo: "https://github.com/shettyg/ovn-namespace.git"
+ovn_namespace_repo_dir: "{{ ovs_clone_dir }}/ovn-namespace"
+ovn_namespace_repo_version: "34c273aa5a885b1d961928d11bce3ff8fd74d578"
+
