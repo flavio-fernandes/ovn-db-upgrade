@@ -1,34 +1,50 @@
 ---
 - debug: msg="building ovs {{ ovs_info.name }} in {{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
 
-- name: "uname -r"
+- name: set ownership of build directory
+  file:
+    path: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
+    state: directory
+    recurse: yes
+    owner: "{{ remote_user }}"
+  become: yes
+  when: remote_user != 'root'
+
+- name: uname -r
   shell: uname -r
   register: uname_info
 
-- name: "nproc"
+- name: nproc
   shell: nproc
   register: nproc_info
 
-- name: "boot.sh"
+- name: boot.sh
   command: ./boot.sh
   args:
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
     creates: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}/configure"
 
-- name: "configure"
+- name: configure
   command: >
     ./configure --with-dbdir="{{ ovsdb_dbdir }}"
-    --prefix=/usr --enable-Werror
-    --localstatedir=/var --sysconfdir=/etc --enable-ssl
+    --prefix=/usr --localstatedir=/var --sysconfdir=/etc --enable-ssl
     --with-linux="/lib/modules/{{ uname_info.stdout }}/build"
   args:
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
     creates: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}/Makefile"
 
-- name: "make ovs"
+- name: check if there is an articaft of a previous build
+  stat: path="{{ ovs_clone_dir }}/{{ ovs_info.dirname }}/utilities/ovs-vsctl"
+  register: pre_existing_build
+
+- debug: msg="OVS already built"
+  when: pre_existing_build.stat.exists
+
+- name: make ovs
   make:
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
     # TODO(flaviof): find a better way of passing params into make
     # ref: http://docs.ansible.com/ansible/make_module.html
     # params="-j{{ nproc_info.stdout }}"
     target: "-j{{ nproc_info.stdout }}"
+  when: not pre_existing_build.stat.exists

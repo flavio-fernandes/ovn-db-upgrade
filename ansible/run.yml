@@ -1,5 +1,5 @@
 ---
-- name: Install 2 ovs+ovn builds and upgrade db from one to the other
+- name: Prepare 2 OVS+OVN builds and upgrade db from one to the other
   hosts: local
   connection: local
   roles:

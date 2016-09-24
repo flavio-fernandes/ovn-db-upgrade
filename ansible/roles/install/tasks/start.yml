@@ -1,21 +1,22 @@
 ---
-- name: "explicitly create dbdir"
+- name: explicitly create dbdir
   file: path="{{ ovsdb_dbdir }}" state=directory owner=root group=root mode=0755
+  become: yes
   when: "{{ ovsdb_dbdir_explicit_create }}"
 
-- name: "install ovn from build directory and start it"
+- name: install ovn from build directory and start it
   become: yes
   make:
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
     target: "install"
 
-- name: "install ovs kernel modules from build directory"
+- name: install ovs kernel modules from build directory
   become: yes
   make:
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
     target: "modules_install"
 
-- name: "create /etc/depmod.d/search_path.conf to point to extra"
+- name: create /etc/depmod.d/search_path.conf to point to extra
   become: yes
   copy:
     dest: /etc/depmod.d/openvswitch.conf
@@ -26,7 +27,7 @@
     group: root
     mode: 0644
 
-- name: "uname -r"
+- name: uname -r
   shell: uname -r
   register: uname_info
 
@@ -36,11 +37,11 @@
   args:
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
 
-- name: "check if openvswitch.ko is currently loaded"
+- name: check if openvswitch.ko is currently loaded
   shell: cat /proc/modules
   register: proc_modules_contents
 
-- name: "load modules needed by ovs/ovn"
+- name: load modules needed by ovs/ovn
   modprobe: name={{ item }} state=present
   become: yes
   with_items:
@@ -52,7 +53,7 @@
     - nf_defrag_ipv4
     - gre
 
-- name: "copy /etc/init.d/openvswitch-switch from build location"
+- name: copy /etc/init.d/openvswitch-switch from build location
   #TODO(flaviof): can do this with a better ansible module?
   command: cp --force "{{ item.0 }}" "{{ item.1 }}"
   become: yes
@@ -60,7 +61,7 @@
     - "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}/debian/openvswitch-switch.init"
     - "/etc/init.d/openvswitch-switch"
 
-- name: "chown /etc/init.d/openvswitch-switch"
+- name: chown /etc/init.d/openvswitch-switch
   file:
     dest: "/etc/init.d/openvswitch-switch"
     state: file
@@ -68,32 +69,32 @@
     group: root
   become: yes
 
-- name: "load ovs module from build location (insmod method)"
+- name: load ovs module from build location (insmod method)
   modprobe: name=openvswitch state=present
   become: yes
   when: proc_modules_contents.stdout.find('openvswitch') == -1
 
-- name: "load ovs module from build location (force-reload-kmod method)"
+- name: load ovs module from build location (force-reload-kmod method)
   command: /etc/init.d/openvswitch-switch force-reload-kmod
   become: yes
   when: proc_modules_contents.stdout.find('openvswitch') != -1
 
-- name: "load vport-geneve module from build location"
+- name: load vport-geneve module from build location
   modprobe: name=vport-geneve state=present
   become: yes
 
-- name: "start openvswitch-switch"
+- name: start openvswitch-switch
   service: name=openvswitch-switch state=started
   become: yes
 
-- name: "start ovn"
+- name: start ovn
   command: /usr/share/openvswitch/scripts/ovn-ctl {{ item }}
   become: yes
   with_items:
     - start_northd
     - start_controller
 
-- name: "configure ovn info into conf.db -- if it did not exist before start"
+- name: configure ovn info into conf.db -- if it did not exist before start
   command: ovs-vsctl --no-wait set open_vswitch . external-ids:{{ item }}
   become: yes
   with_items:

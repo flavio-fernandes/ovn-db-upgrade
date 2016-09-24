@@ -3,11 +3,11 @@
 
 - include: ../../common/tasks/stop_ovn_process.yml
 
-- name: "remove dbdir {{ ovsdb_dbdir }}"
+- name: remove dbdir {{ ovsdb_dbdir }}
   file: path="{{ ovsdb_dbdir }}" state=absent
   become: yes
 
-- name: "remove /etc/openvswitch/system-id.conf"
-  file: path="/etc/openvswitch/system-id.conf" state=absent
+- name: remove /etc/openvswitch/system-id.conf
+  file: path=/etc/openvswitch/system-id.conf state=absent
   become: yes
 

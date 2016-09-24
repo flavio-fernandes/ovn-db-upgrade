@@ -1,11 +1,11 @@
 ---
 - debug: msg="stop ovn and ovs"
 
-- name: "check if /usr/share/openvswitch/scripts/ovn-ctl exists"
+- name: check if /usr/share/openvswitch/scripts/ovn-ctl exists
   stat: path="/usr/share/openvswitch/scripts/ovn-ctl"
   register: ovn_ctl_script
 
-- name: "make sure ovn is not running"
+- name: make sure ovn is not running
   command: /usr/share/openvswitch/scripts/ovn-ctl {{ item }}
   become: yes
   with_items:
@@ -13,11 +13,11 @@
     - stop_northd
   when: ovn_ctl_script.stat.exists
 
-- name: "check if openvswitch_switch service exists"
+- name: check if openvswitch_switch service exists
   stat: path="/etc/init.d/openvswitch-switch"
   register: openvswitch_switch_service
 
-- name: "make sure openvswitch-switch is not running"
+- name: make sure openvswitch-switch is not running
   service: name=openvswitch-switch state=stopped
   become: yes
   when: openvswitch_switch_service.stat.exists

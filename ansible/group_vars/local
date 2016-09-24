@@ -1,17 +1,18 @@
 ---
 # The OVS/OVN code that will be initially started
 ovs1:
-  dirname: "ovs1"
-  name: "prev_ovs_release"
-  repo: "https://github.com/openvswitch/ovs.git"
-  version: "branch-2.6"
+  dirname: ovs1
+  name: prev_ovs_release
+  repo: https://github.com/openvswitch/ovs.git
+  version: branch-2.6
 
 # The OVS/OVN code that will be causing DB upgrade/downgrade
 ovs2:
-  dirname: "ovs2"
-  name: "new_ovs_release"
-  repo: "https://github.com/openvswitch/ovs.git"
-  ##version: "2156ef0"
+  dirname: ovs2
+  name: new_ovs_release
+  repo: https://github.com/openvswitch/ovs.git
+  ## If no version is provided, it will use repo's HEAD
+  ##version: 2156ef0
 
 # The directory where ovsdb dbs are stored
 ovsdb_dbdir: /home/vagrant/db

@@ -3,19 +3,20 @@
 
 - include: ../../common/tasks/stop_ovn_process.yml
 
-- name: "check if ovs has previously created a database"
+- name: check if ovs has previously created a database
   stat: path="{{ ovsdb_dbdir }}/conf.db"
   register: pre_existing_conf_db
+
 - debug: msg="Database file {{ ovsdb_dbdir }}/conf.db is present before install in {{ ansible_eth0["ipv4"]["address"] }}"
   when: pre_existing_conf_db.stat.exists
 
-- name: "remove currently installed geneve module"
+- name: remove currently installed geneve module
   modprobe: name=vport-geneve state=absent
   become: yes
 
-- name: "remove (try to) currently installed ovs module"
-  modprobe: name=openvswitch state=absent
-  become: yes
-  # Note: it is not the end of the world if this fails...
-  # http://openvswitch.org/pipermail/discuss/2016-September/022754.html
-  ignore_errors: yes
+#- name: remove (try to but likely to fail) openvswitch module
+#  modprobe: name=openvswitch state=absent
+#  become: yes
+#  # Note: it is not the end of the world if this fails...
+#  # http://openvswitch.org/pipermail/discuss/2016-September/022754.html
+#  ignore_errors: yes

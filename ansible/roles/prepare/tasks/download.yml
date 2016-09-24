@@ -5,7 +5,7 @@
     - "{{ ovs_info.repo }}"
     - "{{ ovs_info.get('version', 'HEAD') }}"
 
-- name: "git clone ovs"
+- name: git clone ovs
   git:
     repo: "{{ ovs_info.repo }}"
     dest: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
