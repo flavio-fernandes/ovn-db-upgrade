@@ -36,6 +36,7 @@ Vagrant.configure(2) do |config|
     ubuntu.vm.provider :virtualbox do |vb|
       vb.memory = vagrant_config['ubuntu']['memory']
       vb.cpus = vagrant_config['ubuntu']['cpus']
+      vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
     end
 
     ubuntu.vm.provision "apt_install_ansible", type: "shell", inline: $apt_install_ansible
