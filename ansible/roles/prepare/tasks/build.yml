@@ -33,7 +33,7 @@
     chdir: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}"
     creates: "{{ ovs_clone_dir }}/{{ ovs_info.dirname }}/Makefile"
 
-- name: check if there is an articaft of a previous build
+- name: check if there is an artifact of a previous build
   stat: path="{{ ovs_clone_dir }}/{{ ovs_info.dirname }}/utilities/ovs-vsctl"
   register: pre_existing_build
 
